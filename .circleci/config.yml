@@ -1,0 +1,65 @@
+version : 2.1
+
+build_filters: &build_filters
+  filters:
+    tags:
+      only: /.*/
+
+deploy_filters: &deploy_filters
+  filters:
+    tags:
+      only: /^v\d\.\d\.\d/
+    branches:
+      ignore: /.*/
+
+commands:
+  codecov:
+    parameters:
+      file:
+        type: string
+    steps:
+      - run:
+          name: Download Codecov script
+          command: curl -s https://codecov.io/bash > ./codecov
+      - run:
+          name: Make Codecov script executable
+          command: chmod +x ./codecov
+      - run:
+          name: Send coverage report
+          command: ./codecov -f << parameters.file >> -t $CODECOV_TOKEN
+
+executors:
+  ubuntu:
+    machine:
+      image: circleci/classic:latest
+
+jobs:
+  build_api:
+    parameters:
+      api_tests_dir:
+        type: string
+      dotnet_version:
+        type: string
+    executor: ubuntu
+    working_directory: ~/project
+    steps:
+      - checkout:
+          path: ~/project
+      - run: sudo sysctl -n -w fs.inotify.max_user_instances=512
+      - run: ~/project/tools/install-dotnet.sh << parameters.dotnet_version >>
+      - run: ./tools/test.sh
+      - codecov:
+          file: << parameters.api_tests_dir >>/coverage/opencover.xml
+      - store_artifacts:
+          path: << parameters.api_tests_dir >>/coverage/report/summary.htm
+          destination: coverage-report.htm
+
+workflows:
+  version: 2.1
+  pdfrest_api:
+    jobs:
+      - build_api:
+          name: build-pdfrest-api
+          api_tests_dir: src/PDFRest.Tests
+          dotnet_version: "3.1.201"
+          <<: *build_filters
