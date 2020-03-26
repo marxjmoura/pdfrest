@@ -3,6 +3,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="itext7" Version="7.1.10" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Update="appsettings*.json" CopyToPublishDirectory="Never" />
+    <Content Include="ColorProfiles\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

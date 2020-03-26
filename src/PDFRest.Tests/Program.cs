@@ -12,28 +12,24 @@ namespace PDFRest.Tests
 
         public Program()
         {
-            BuildPath = Path.Combine("bin", "Debug", "netcoreapp3.1");
-            ProjectPath = AppContext.BaseDirectory.Replace(BuildPath, string.Empty);
-            ContentPath = ProjectPath.Replace("Tests", "API");
-
             _configuration = new ConfigurationBuilder()
-                .SetBasePath(ProjectPath)
+                .SetBasePath(TestProjectPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
                 .Build();
         }
 
-        public string BuildPath { get; }
-        public string ProjectPath { get; }
-        public string ContentPath { get; }
+        public static string BuildPath => Path.Combine("bin", "Debug", "netcoreapp3.1");
+        public static string TestProjectPath => AppContext.BaseDirectory.Replace(BuildPath, string.Empty);
+        public static string ContentPath => TestProjectPath.Replace("Tests", "API");
 
         public IWebHostBuilder CreateWebHostBuilder() => new WebHostBuilder()
             .UseStartup<Startup>()
             .UseEnvironment("Testing")
             .ConfigureAppConfiguration((builder, config) =>
             {
-                builder.HostingEnvironment.ContentRootPath = ProjectPath;
+                builder.HostingEnvironment.ContentRootPath = ContentPath;
                 builder.HostingEnvironment.WebRootPath = ContentPath;
-                builder.HostingEnvironment.ContentRootFileProvider = new PhysicalFileProvider(ProjectPath);
+                builder.HostingEnvironment.ContentRootFileProvider = new PhysicalFileProvider(ContentPath);
                 builder.HostingEnvironment.WebRootFileProvider = new PhysicalFileProvider(ContentPath);
 
                 config.AddConfiguration(_configuration);
