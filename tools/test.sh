@@ -17,7 +17,7 @@ dotnet test \
   /p:AltCoverXmlReport="coverage/opencover.xml" \
   /p:AltCoverInputDirectory="$api_project_dir" \
   /p:AltCoverAttributeFilter="ExcludeFromCodeCoverage" \
-  /p:AltCoverAssemblyExcludeFilter="System(.*)|xunit|$test_project_dir|$api_project_dir.Views"
+  /p:AltCoverAssemblyExcludeFilter="System(.*)|BouncyCastle(.*)|xunit|$test_project_dir|$api_project_dir.Views"
 
 dotnet reportgenerator \
   "-reports:coverage/opencover.xml" \
