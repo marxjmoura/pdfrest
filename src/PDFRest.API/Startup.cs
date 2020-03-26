@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PDFRest.API.Filters;
 
 namespace PDFRest.API
 {
@@ -11,7 +12,10 @@ namespace PDFRest.API
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(new RequestValidationFilter());
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

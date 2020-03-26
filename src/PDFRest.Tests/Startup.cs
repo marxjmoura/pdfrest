@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PDFRest.API.Filters;
 
 namespace PDFRest.Tests
 {
@@ -15,7 +16,11 @@ namespace PDFRest.Tests
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddApplicationPart(typeof(PDFRest.API.Program).Assembly);
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(new RequestValidationFilter());
+            })
+            .AddApplicationPart(typeof(PDFRest.API.Program).Assembly);
         }
 
         public void Configure(IApplicationBuilder app)
