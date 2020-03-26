@@ -10,11 +10,6 @@ namespace PDFRest.API.Models
     {
         public BadRequestError() { }
 
-        public BadRequestError(params string[] errors)
-        {
-            Errors = errors;
-        }
-
         public BadRequestError(IEnumerable<ModelError> modelErrors)
         {
             Errors = modelErrors
