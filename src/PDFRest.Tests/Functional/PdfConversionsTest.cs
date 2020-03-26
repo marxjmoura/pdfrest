@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 using iText.Kernel.Pdf;
 using iText.Kernel.XMP;
 using iText.Pdfa;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using PDFRest.API.Models;
 using PDFRest.Tests.Factories;
@@ -34,8 +32,7 @@ namespace PDFRest.Tests.Functional
         public async Task ShouldConvertToPdfA2B(string level, string part, string conformance)
         {
             var path = $"/pdfa";
-            var environment = _server.Host.Services.GetService<IWebHostEnvironment>();
-            var fixture = $"{environment.ContentRootPath}/Fixtures/dummy.pdf";
+            var fixture = $"{Program.TestProjectPath}/Fixtures/dummy.pdf";
             var pdfFile = await File.ReadAllBytesAsync(fixture);
             var formData = new PdfFormData().WithConformanceLevel(level).Upload(pdfFile);
             var response = await _client.PostAsync(path, formData);
@@ -55,8 +52,7 @@ namespace PDFRest.Tests.Functional
         {
             var path = $"/pdfa";
             var title = Guid.NewGuid().ToString("N");
-            var environment = _server.Host.Services.GetService<IWebHostEnvironment>();
-            var fixture = $"{environment.ContentRootPath}/Fixtures/dummy.pdf";
+            var fixture = $"{Program.TestProjectPath}/Fixtures/dummy.pdf";
             var pdfFile = await File.ReadAllBytesAsync(fixture);
 
             var formData = new PdfFormData()
@@ -77,8 +73,7 @@ namespace PDFRest.Tests.Functional
         {
             var path = $"/pdfa";
             var author = Guid.NewGuid().ToString("N");
-            var environment = _server.Host.Services.GetService<IWebHostEnvironment>();
-            var fixture = $"{environment.ContentRootPath}/Fixtures/dummy.pdf";
+            var fixture = $"{Program.TestProjectPath}/Fixtures/dummy.pdf";
             var pdfFile = await File.ReadAllBytesAsync(fixture);
 
             var formData = new PdfFormData()
@@ -99,8 +94,7 @@ namespace PDFRest.Tests.Functional
         {
             var path = $"/pdfa";
             var creationDate = new DateTime(1980, 10, 10);
-            var environment = _server.Host.Services.GetService<IWebHostEnvironment>();
-            var fixture = $"{environment.ContentRootPath}/Fixtures/dummy.pdf";
+            var fixture = $"{Program.TestProjectPath}/Fixtures/dummy.pdf";
             var pdfFile = await File.ReadAllBytesAsync(fixture);
 
             var formData = new PdfFormData()
@@ -124,8 +118,7 @@ namespace PDFRest.Tests.Functional
             var path = $"/pdfa";
             var prop1 = Guid.NewGuid().ToString("N");
             var prop2 = Guid.NewGuid().ToString("N");
-            var environment = _server.Host.Services.GetService<IWebHostEnvironment>();
-            var fixture = $"{environment.ContentRootPath}/Fixtures/dummy.pdf";
+            var fixture = $"{Program.TestProjectPath}/Fixtures/dummy.pdf";
             var pdfFile = await File.ReadAllBytesAsync(fixture);
 
             var formData = new PdfFormData().WithConformanceLevel("PDF_A_2B")

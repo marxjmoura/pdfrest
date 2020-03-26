@@ -33,7 +33,7 @@ namespace PDFRest.API.Controllers
             using (var stream = formData.File.OpenReadStream())
             {
                 var output = new MemoryStream();
-                var intent = new PdfaColorProfile().ToPdfOutputIntent(_env.WebRootPath);
+                var intent = new PdfaColorProfile().ToPdfOutputIntent(_env.ContentRootPath);
                 var conformance = formData.ToPdfAConformanceLevel();
                 var reader = new PdfReader(stream);
                 var writer = new PdfWriter(output);
