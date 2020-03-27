@@ -14,9 +14,6 @@ namespace PDFRest.API.Models
         [Required, RegularExpression("^PDF_A_2B|PDF_A_2U|PDF_A_3B$")]
         public string ConformanceLevel { get; set; }
 
-        [RegularExpression("^application/pdf$", ErrorMessage = "File must be in PDF format.")]
-        public string ContentType => File?.ContentType;
-
         [MaxLength(255)]
         public string Title { get; set; }
 
@@ -41,17 +38,17 @@ namespace PDFRest.API.Models
 
         public IDictionary<string, string> CustomPropertiesAsDictionary()
         {
-            var customProperties = new Dictionary<string, string>();
+            var dictionary = new Dictionary<string, string>();
 
             if (CustomProperties != null)
             {
                 foreach (var property in CustomProperties)
                 {
-                    customProperties.Add(property.Name, property.Value);
+                    dictionary.Add(property.Name, property.Value);
                 }
             }
 
-            return customProperties;
+            return dictionary;
         }
     }
 }
