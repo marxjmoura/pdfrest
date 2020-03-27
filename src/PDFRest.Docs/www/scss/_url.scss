@@ -1,0 +1,47 @@
+.url {
+  background-color: $gray-100;;
+  font-family: $font-family-monospace;
+  border-left: .5rem $gray-300 solid;
+  padding: .5rem .75rem;
+  white-space: nowrap;
+  overflow-x: auto;
+
+  &.get:before,
+  &.post:before,
+  &.put:before,
+  &.delete:before {
+    color: $gray-500;
+  }
+
+  &.get {
+    border-color: $warning;
+
+    &:before {
+      content: 'GET ';
+    }
+  }
+
+  &.post {
+    border-color: $success;
+
+    &:before {
+      content: 'POST ';
+    }
+  }
+
+  &.put {
+    border-color: $info;
+
+    &:before {
+      content: 'PUT ';
+    }
+  }
+
+  &.delete {
+    border-color: $danger;
+
+    &:before {
+      content: 'DELETE ';
+    }
+  }
+}

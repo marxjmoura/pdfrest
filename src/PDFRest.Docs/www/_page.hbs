@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#2c3e50">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Marx J. Moura">
+  <meta name="description" content="PDF Rest is a open source REST API that allows you to edit PDF files and convert to PDF/A." />
+  <meta property="og:title" content="PDF Rest"/>
+  <meta property="og:description" content="Edit PDF and convert to PDF/A"/>
+  <meta property="og:image" content="https://marxjmoura.github.io/pdfrest/og-image.jpg"/>
+  <meta property="og:url" content="https://marxjmoura.github.io/pdfrest" />
+  <title>PDF Rest</title>
+  {{#> head-block}}{{/head-block}}
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/docs.min.css">
+</head>
+<body>
+  <header>
+    <a href="#" class="nav-toggle">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </a>
+    <a href="/">
+      <b>PDF Rest</b>
+    </a>
+  </header>
+  <nav>
+    {{{ include 'www/_sidebar.hbs' }}}
+  </nav>
+  <div class="page">
+    <div class="content">
+      {{#> body-block}}{{/body-block}}
+    </div>
+  </div>
+  <script src="/docs.min.js"></script>
+  {{#> scripts-block}}{{/scripts-block}}
+</body>
+</html>
