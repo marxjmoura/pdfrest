@@ -27,6 +27,15 @@ namespace PDFRest.API
                 options.Filters.Add(new RequestValidationFilter());
             });
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy => policy
+                    .SetIsOriginAllowed(host => true)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials());
+            });
+
             services.AddSwaggerDocumentation();
         }
 
@@ -37,6 +46,7 @@ namespace PDFRest.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors();
             app.UseSwaggerDocumentation();
             app.UseRouting();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
