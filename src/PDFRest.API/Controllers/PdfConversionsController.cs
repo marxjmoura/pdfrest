@@ -47,10 +47,10 @@ namespace PDFRest.API.Controllers
                     pages.Copy(pdf);
 
                     metadata.CopyCustomProperties(pdf);
-                    metadata.AddCustomProperties(formData.CustomPropertiesAsDictionary());
-                    metadata.AddTitle(formData.Title);
-                    metadata.AddAuthor(formData.Author);
-                    metadata.AddCreationDate(formData.CreationDate);
+                    metadata.AddOrReplaceCustomProperties(formData.CustomPropertiesAsDictionary());
+                    metadata.AddOrReplaceTitle(formData.Title);
+                    metadata.AddOrReplaceAuthor(formData.Author);
+                    metadata.AddOrReplaceCreationDate(formData.CreationDate);
 
                     new Document(pdfa).Close();
 

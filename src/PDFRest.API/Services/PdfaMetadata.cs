@@ -14,21 +14,21 @@ namespace PDFRest.API.Services
             _pdfa = pdfa;
         }
 
-        public void AddTitle(string title)
+        public void AddOrReplaceTitle(string title)
         {
             if (string.IsNullOrWhiteSpace(title)) return;
 
             _pdfa.GetDocumentInfo().SetMoreInfo(PdfName.Title.GetValue(), title);
         }
 
-        public void AddAuthor(string author)
+        public void AddOrReplaceAuthor(string author)
         {
             if (string.IsNullOrWhiteSpace(author)) return;
 
             _pdfa.GetDocumentInfo().SetMoreInfo(PdfName.Author.GetValue(), author);
         }
 
-        public void AddCustomProperties(IDictionary<string, string> customProperties)
+        public void AddOrReplaceCustomProperties(IDictionary<string, string> customProperties)
         {
             foreach (var property in customProperties)
             {
@@ -36,7 +36,7 @@ namespace PDFRest.API.Services
             }
         }
 
-        public void AddCreationDate(DateTime? creationDate)
+        public void AddOrReplaceCreationDate(DateTime? creationDate)
         {
             if (creationDate == null) return;
 
