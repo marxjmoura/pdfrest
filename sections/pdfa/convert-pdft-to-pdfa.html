@@ -1,0 +1,44 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="theme-color" content="#2c3e50"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="author" content="Marx J. Moura"><meta name="description" content="PDF Rest is a open source REST API that allows you to edit PDF files and convert to PDF/A."><meta property="og:title" content="PDF Rest"><meta property="og:description" content="Edit PDF and convert to PDF/A"><meta property="og:image" content="https://marxjmoura.github.io/pdfrest/og-image.jpg"><meta property="og:url" content="https://marxjmoura.github.io/pdfrest"><title>PDF Rest</title><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/docs.min.css"></head><body><header><a href="#" class="nav-toggle"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a><a href="/"><b>PDF Rest</b></a></header><nav><ul><li><a href="/">Introduction</a></li><li><a href="/sections/pdfa/convert-pdft-to-pdfa.html">Convert PDF to PDF/A</a></li></ul></nav><div class="page"><div class="content"><h1>Convert PDF to PDF/A</h1><p>Convert PDF to PDF/A replacing title, author, creation date and custom properties.</p><p class="url post">/pdfa</p><h2>Body parameters</h2><p>This method supports only <code>multipart/form-data</code>.</p><div class="table-responsive"><table><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td><code>file</code><br><small>binary, required</small></td><td>PDF file that you want to convert to PDF/A.</td></tr><tr><td><code>conformanceLevel</code><br><small>enum, required</small></td><td>PDF/A conformance level: <code>PDF_A_2B</code>, <code>PDF_A_3B</code> or <code>PDF_A_2U</code>.</td></tr><tr><td><code>title</code><br><small>string(255)</small></td><td>Replace the title of the PDF file.</td></tr><tr><td><code>author</code><br><small>string(255)</small></td><td>Replace the author of the PDF file.</td></tr><tr><td><code>creationDate</code><br><small>datetime</small></td><td>Replace the creation date of the PDF file.</td></tr><tr><td><code>customProperties</code><br><small>object[]</small></td><td>Add or replace custom properties (metadata) to the PDF file.</td></tr><tr><td><code>customProperties[].name</code><br><small>string(255), required</small></td><td>Name of the custom property.</td></tr><tr><td><code>customProperties[].value</code><br><small>string(255), required</small></td><td>Value of the custom property.</td></tr></tbody></table></div><ul class="nav nav-tabs"><li class="nav-item"><a href="#js" class="nav-link active" data-toggle="tab">JS</a></li><li class="nav-item"><a href="#csharp" class="nav-link" data-toggle="tab">C#</a></li></ul><div class="tab-content"><div id="js" class="tab-pane show active"><pre><code>var formData &#x3D; new FormData();
+
+formData.append(&#x27;file&#x27;, pdfFile);
+formData.append(&#x27;conformanceLevel&#x27;, &#x27;PDF_A_2B&#x27;);
+formData.append(&#x27;title&#x27;, &#x27;My Title&#x27;);
+formData.append(&#x27;author&#x27;, &#x27;Author name&#x27;);
+formData.append(&#x27;creationDate&#x27;, new Date());
+formData.append(&#x27;customProperties[0].name&#x27;, &#x27;MyProperty&#x27;);
+formData.append(&#x27;customProperties[0].value&#x27;, &#x27;My Property Value&#x27;);
+
+axios({
+  method: &#x27;post&#x27;,
+  url: &#x27;/pdfa&#x27;,
+  data: formData,
+  config: {
+    headers: {
+      &#x27;Content-Type&#x27;: &#x27;multipart/form-data&#x27;
+    }
+  }
+}).then(function (response) {
+  // handle success
+}).catch(function (response) {
+  // handle error
+});
+</code></pre></div><div id="csharp" class="tab-pane"><pre><code>var bytes &#x3D; File.ReadAllBytes(&quot;/path/to/file.pdf&quot;);
+var pdfFile &#x3D; new ByteArrayContent(bytes);
+
+pdfFile.Headers.ContentType &#x3D; new MediaTypeHeaderValue(MediaTypeNames.Application.Pdf);
+
+var formData &#x3D; new MultipartFormDataContent();
+formData.Add(pdfFile, &quot;file&quot;, &quot;file&quot;);
+formData.Add(&quot;PDF_A_2B&quot;, &quot;conformanceLevel&quot;);
+formData.Add(&quot;My Title&quot;, &quot;title&quot;);
+formData.Add(&quot;Author name&quot;, &quot;author&quot;);
+formData.Add(new DateTime().ToString(&quot;o&quot;), &quot;creationDate&quot;);
+formData.Add(&quot;MyProperty&quot;, &quot;customProperties[0].name&quot;);
+formData.Add(&quot;My Property Value&quot;, &quot;customProperties[0].value&quot;);
+
+var client &#x3D; new HttpClient();
+var response &#x3D; await _client.PostAsync(&quot;/pdfa&quot;, formData);
+</code></pre></div></div><h2>Responses</h2><p>Status code 200 - PDF/A file (binary).</p><p>Status code 400 - Malformed request body:</p><pre><code>{
+  &quot;errors&quot;: []
+}
+</code></pre><p>Status code 500 - Internal API error.</p></div></div><script src="/docs.min.js"></script></body></html>
