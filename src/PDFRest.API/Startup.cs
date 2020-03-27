@@ -26,6 +26,8 @@ namespace PDFRest.API
             {
                 options.Filters.Add(new RequestValidationFilter());
             });
+
+            services.AddSwaggerDocumentation();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -35,6 +37,7 @@ namespace PDFRest.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSwaggerDocumentation();
             app.UseRouting();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
