@@ -1,11 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "build-js": "gulp build-js",
-    "build-html": "gulp build-html",
-    "build-sass": "gulp build-sass",
-    "build": "gulp build",
-    "start": "gulp start"
+    "start": "gulp start",
+    "publish": "gulp publish"
   },
   "dependencies": {
     "bootstrap": "^4.4.1",

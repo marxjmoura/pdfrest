@@ -63,4 +63,12 @@ gulp.task('serve', done => {
   done()
 })
 
-gulp.task('start', gulp.series('serve', 'watch', 'build'))
+gulp.task('start', done => {
+  process.env.NODE_ENV = 'development'
+  gulp.series('serve', 'watch', 'build')(done)
+})
+
+gulp.task('publish', done => {
+  process.env.NODE_ENV = 'production'
+  gulp.series('build')(done)
+})
