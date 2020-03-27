@@ -7,6 +7,10 @@ const PluginError = require('plugin-error')
 const ROOTDIR = process.cwd()
 const PLUGIN_NAME = 'gulp-site-engine'
 
+handlebars.registerHelper('baseUrl', function () {
+  return process.env.NODE_ENV === 'production' ? 'https://marxjmoura.github.io/pdfrest' : ''
+})
+
 handlebars.registerHelper('include', function (file) {
   try {
     return fs.readFileSync(file, 'utf8')
