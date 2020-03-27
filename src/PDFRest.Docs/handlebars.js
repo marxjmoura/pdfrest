@@ -13,7 +13,10 @@ handlebars.registerHelper('baseUrl', function () {
 
 handlebars.registerHelper('include', function (file) {
   try {
-    return fs.readFileSync(file, 'utf8')
+    const source = fs.readFileSync(file, 'utf8')
+    const template = handlebars.compile(source)
+
+    return template({})
   } catch (error) {
     console.error(PLUGIN_NAME, error.message)
     return ''
