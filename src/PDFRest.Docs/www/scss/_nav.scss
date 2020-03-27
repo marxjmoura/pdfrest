@@ -1,0 +1,44 @@
+nav {
+  position: fixed;
+  top: $header-height;
+  left: 0;
+  bottom: 0;
+  width: $nav-width;
+  background-color: $white;
+  border-right: $border-width $border-color solid;
+  overflow-y: auto;
+  z-index: $zindex-fixed;
+  transition: width .2s ease-in-out;
+
+  ul {
+    list-style-type: none;
+    line-height: 1.8;
+    margin: 1rem 0;
+    padding: 0 1.5rem;
+    white-space: nowrap;
+
+    li {
+      font-weight: 500;
+
+      a {
+        color: $body-color;
+        font-weight: 400;
+
+        &:hover {
+          color: $primary;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: map-get($grid-breakpoints, 'md')) {
+  nav {
+    width: 0;
+  }
+
+  .nav-show nav {
+    width: $nav-width;
+  }
+}
