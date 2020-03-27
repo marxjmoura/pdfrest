@@ -11,6 +11,7 @@ using PDFRest.API.Services;
 
 namespace PDFRest.API.Controllers
 {
+    [ApiExplorerSettings(GroupName = "PDF conversions")]
     public sealed class PdfConversionsController : Controller
     {
         private readonly IWebHostEnvironment _env;
@@ -23,6 +24,10 @@ namespace PDFRest.API.Controllers
         }
 
         [HttpPost, Route("/pdfa")]
+        [Consumes("multipart/form-data")]
+        [Produces(MediaTypeNames.Application.Pdf)]
+        [ProducesResponseType(statusCode: 200)]
+        [ProducesResponseType(statusCode: 400, type: typeof(BadRequestError))]
         public IActionResult CreatePdfa([FromForm] PdfFormData formData)
         {
             if (formData.File.Length > _options.MaxFileSize)
