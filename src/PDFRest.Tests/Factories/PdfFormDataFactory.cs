@@ -57,7 +57,7 @@ namespace PDFRest.Tests.Factories
             file.Headers.ContentType = new MediaTypeHeaderValue(MediaTypeNames.Application.Pdf);
 
             var formData = new MultipartFormDataContent();
-            formData.Add(file, nameof(PdfFormData.File), nameof(PdfFormData.File));
+            formData.Add(file, nameof(PdfFormData.File), "dummy.pdf");
 
             if (model.ConformanceLevel != null)
             {

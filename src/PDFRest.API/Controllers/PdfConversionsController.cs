@@ -59,7 +59,7 @@ namespace PDFRest.API.Controllers
 
                     new Document(pdfa).Close();
 
-                    return File(output.ToArray(), MediaTypeNames.Application.Pdf);
+                    return File(output.ToArray(), MediaTypeNames.Application.Pdf, $"{formData.File.Name}.pdf");
                 }
             }
         }
