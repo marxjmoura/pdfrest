@@ -43,7 +43,6 @@ yarn-error.log*
 .vscode
 *.ntvs*
 *.njsproj
-*.sln
 *.suo
 *.sw?
 *.user
