@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace PDFRest.API.Models
+namespace PDFRest.API.Models.Errors
 {
     public class BadRequestError : IActionResult
     {

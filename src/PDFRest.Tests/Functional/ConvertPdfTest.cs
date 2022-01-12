@@ -8,18 +8,18 @@ using iText.Kernel.XMP;
 using iText.Pdfa;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
-using PDFRest.API.Models;
+using PDFRest.API.Models.Errors;
 using PDFRest.Tests.Factories;
 using Xunit;
 
 namespace PDFRest.Tests.Functional
 {
-    public sealed class PdfConversionsTest
+    public sealed class ConvertPdfTest
     {
         private readonly TestServer _server;
         private readonly HttpClient _client;
 
-        public PdfConversionsTest()
+        public ConvertPdfTest()
         {
             _server = new TestServer(new Program().CreateWebHostBuilder());
             _client = _server.CreateClient();
@@ -29,13 +29,16 @@ namespace PDFRest.Tests.Functional
         [InlineData("PDF_A_2B", "2", "B")]
         [InlineData("PDF_A_2U", "2", "U")]
         [InlineData("PDF_A_3B", "3", "B")]
-        public async Task ShouldConvertToPdfA2B(string level, string part, string conformance)
+        public async Task ShouldConvertToPdfa(string level, string part, string conformance)
         {
-            var path = $"/pdfa";
-            var fixture = $"{Program.TestProjectPath}/Fixtures/dummy.pdf";
-            var pdfFile = await File.ReadAllBytesAsync(fixture);
-            var formData = new PdfFormData().WithConformanceLevel(level).Upload(pdfFile);
-            var response = await _client.PostAsync(path, formData);
+            var pdfPath = $"{Program.TestProjectPath}/Fixtures/dummy.pdf";
+            var pdfFile = await File.ReadAllBytesAsync(pdfPath);
+
+            var formData = new MultipartFormDataContent()
+                .WithConformanceLevel(level)
+                .Upload(pdfFile);
+
+            var response = await _client.PostAsync("/pdfa", formData);
             var stream = await response.Content.ReadAsStreamAsync();
             var pdfa = new PdfADocument(new PdfReader(stream), new PdfWriter(new MemoryStream()));
             var xmpMetadataBytes = pdfa.GetXmpMetadata();
@@ -50,17 +53,16 @@ namespace PDFRest.Tests.Functional
         [Fact]
         public async Task ShouldReplaceTitle()
         {
-            var path = $"/pdfa";
             var title = Guid.NewGuid().ToString("N");
-            var fixture = $"{Program.TestProjectPath}/Fixtures/dummy.pdf";
-            var pdfFile = await File.ReadAllBytesAsync(fixture);
+            var pdfPath = $"{Program.TestProjectPath}/Fixtures/dummy.pdf";
+            var pdfFile = await File.ReadAllBytesAsync(pdfPath);
 
-            var formData = new PdfFormData()
+            var formData = new MultipartFormDataContent()
                 .WithConformanceLevel("PDF_A_2B")
-                .WithTitle(title)
+                .ReplaceTitle(title)
                 .Upload(pdfFile);
 
-            var response = await _client.PostAsync(path, formData);
+            var response = await _client.PostAsync("/pdfa", formData);
             var stream = await response.Content.ReadAsStreamAsync();
             var pdfa = new PdfADocument(new PdfReader(stream), new PdfWriter(new MemoryStream()));
 
@@ -71,17 +73,16 @@ namespace PDFRest.Tests.Functional
         [Fact]
         public async Task ShouldReplaceAuthor()
         {
-            var path = $"/pdfa";
             var author = Guid.NewGuid().ToString("N");
-            var fixture = $"{Program.TestProjectPath}/Fixtures/dummy.pdf";
-            var pdfFile = await File.ReadAllBytesAsync(fixture);
+            var pdfPath = $"{Program.TestProjectPath}/Fixtures/dummy.pdf";
+            var pdfFile = await File.ReadAllBytesAsync(pdfPath);
 
-            var formData = new PdfFormData()
+            var formData = new MultipartFormDataContent()
                 .WithConformanceLevel("PDF_A_2B")
-                .WithAuthor(author)
+                .ReplaceAuthor(author)
                 .Upload(pdfFile);
 
-            var response = await _client.PostAsync(path, formData);
+            var response = await _client.PostAsync("/pdfa", formData);
             var stream = await response.Content.ReadAsStreamAsync();
             var pdfa = new PdfADocument(new PdfReader(stream), new PdfWriter(new MemoryStream()));
 
@@ -92,17 +93,16 @@ namespace PDFRest.Tests.Functional
         [Fact]
         public async Task ShouldReplaceCreationDate()
         {
-            var path = $"/pdfa";
             var creationDate = new DateTime(1980, 10, 10);
-            var fixture = $"{Program.TestProjectPath}/Fixtures/dummy.pdf";
-            var pdfFile = await File.ReadAllBytesAsync(fixture);
+            var pdfPath = $"{Program.TestProjectPath}/Fixtures/dummy.pdf";
+            var pdfFile = await File.ReadAllBytesAsync(pdfPath);
 
-            var formData = new PdfFormData()
+            var formData = new MultipartFormDataContent()
                 .WithConformanceLevel("PDF_A_2B")
-                .WithCreationDate(creationDate)
+                .ReplaceCreationDate(creationDate)
                 .Upload(pdfFile);
 
-            var response = await _client.PostAsync(path, formData);
+            var response = await _client.PostAsync("/pdfa", formData);
             var stream = await response.Content.ReadAsStreamAsync();
             var pdfa = new PdfADocument(new PdfReader(stream), new PdfWriter(new MemoryStream()));
             var creationDateProperty = PdfName.CreationDate.GetValue();
@@ -115,32 +115,30 @@ namespace PDFRest.Tests.Functional
         [Fact]
         public async Task ShouldAddCustomProperties()
         {
-            var path = $"/pdfa";
-            var prop1 = Guid.NewGuid().ToString("N");
-            var prop2 = Guid.NewGuid().ToString("N");
-            var fixture = $"{Program.TestProjectPath}/Fixtures/dummy.pdf";
-            var pdfFile = await File.ReadAllBytesAsync(fixture);
+            var property1 = Guid.NewGuid().ToString("N");
+            var property2 = Guid.NewGuid().ToString("N");
+            var pdfPath = $"{Program.TestProjectPath}/Fixtures/dummy.pdf";
+            var pdfFile = await File.ReadAllBytesAsync(pdfPath);
 
-            var formData = new PdfFormData().WithConformanceLevel("PDF_A_2B")
-                .AddCustomProperty(nameof(prop1), prop1)
-                .AddCustomProperty(nameof(prop2), prop2)
+            var formData = new MultipartFormDataContent().WithConformanceLevel("PDF_A_2B")
+                .AddCustomProperty(index: 0, nameof(property1), property1)
+                .AddCustomProperty(index: 1, nameof(property2), property2)
                 .Upload(pdfFile);
 
-            var response = await _client.PostAsync(path, formData);
+            var response = await _client.PostAsync("/pdfa", formData);
             var stream = await response.Content.ReadAsStreamAsync();
             var pdfa = new PdfADocument(new PdfReader(stream), new PdfWriter(new MemoryStream()));
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(prop1, pdfa.GetDocumentInfo().GetMoreInfo(nameof(prop1)));
-            Assert.Equal(prop2, pdfa.GetDocumentInfo().GetMoreInfo(nameof(prop2)));
+            Assert.Equal(property1, pdfa.GetDocumentInfo().GetMoreInfo(nameof(property1)));
+            Assert.Equal(property2, pdfa.GetDocumentInfo().GetMoreInfo(nameof(property2)));
         }
 
         [Fact]
         public async Task ShouldRespond400ForRequiredFields()
         {
-            var path = $"/pdfa";
-            var formData = new PdfFormData().Upload(new byte[0]);
-            var response = await _client.PostAsync(path, formData);
+            var formData = new MultipartFormDataContent().Upload(new byte[0]);
+            var response = await _client.PostAsync("/pdfa", formData);
             var responseContent = await response.Content.ReadAsStringAsync();
             var responseJson = JsonConvert.DeserializeObject<BadRequestError>(responseContent);
 
@@ -151,16 +149,19 @@ namespace PDFRest.Tests.Functional
         [Fact]
         public async Task ShouldRespond400ForSizeExceeded()
         {
-            var path = $"/pdfa";
-            var size10MB = 10485760;
-            var pdfFile = new byte[size10MB];
-            var formData = new PdfFormData().WithConformanceLevel("PDF_A_2B").Upload(pdfFile);
-            var response = await _client.PostAsync(path, formData);
+            var size11MB = 11534336;
+            var pdfFile = new byte[size11MB];
+
+            var formData = new MultipartFormDataContent()
+                .WithConformanceLevel("PDF_A_2B")
+                .Upload(pdfFile);
+
+            var response = await _client.PostAsync("/pdfa", formData);
             var responseContent = await response.Content.ReadAsStringAsync();
             var responseJson = JsonConvert.DeserializeObject<BadRequestError>(responseContent);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.Contains(responseJson.Errors, error => error == "File must be up to 5242880 bytes.");
+            Assert.Contains(responseJson.Errors, error => error == "Document must be up to 10485760 bytes.");
         }
     }
 }

@@ -1,17 +1,14 @@
-using System.IO;
 using System.Net.Mime;
-using iText.Kernel.Pdf;
-using iText.Layout;
-using iText.Pdfa;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using PDFRest.API.Features.Conversion;
 using PDFRest.API.Models;
-using PDFRest.API.Services;
+using PDFRest.API.Models.Errors;
 
 namespace PDFRest.API.Controllers
 {
-    [ApiExplorerSettings(GroupName = "PDF conversions")]
+    [ApiExplorerSettings(GroupName = "PDF to PDF/A")]
     public sealed class PdfConversionsController : Controller
     {
         private readonly IWebHostEnvironment _env;
@@ -28,39 +25,27 @@ namespace PDFRest.API.Controllers
         [Produces(MediaTypeNames.Application.Pdf)]
         [ProducesResponseType(statusCode: 200)]
         [ProducesResponseType(statusCode: 400, type: typeof(BadRequestError))]
-        public IActionResult CreatePdfa([FromForm] PdfFormData formData)
+        public IActionResult CreatePdfa([FromForm] PdfConversionFormData formData)
         {
-            if (formData.File.Length > _options.MaxFileSize)
+            if (formData.File.Length > _options.MaxPdfFileSize)
             {
-                return new FileSizeExceededError(_options.MaxFileSize);
+                return new PdfSizeExceededError(_options.MaxPdfFileSize);
             }
 
-            using (var stream = formData.File.OpenReadStream())
+            using (var pdf = formData.File.OpenReadStream())
             {
-                var output = new MemoryStream();
-                var intent = new PdfaColorProfile().ToPdfOutputIntent(_env.ContentRootPath);
-                var conformance = formData.ToPdfAConformanceLevel();
-                var reader = new PdfReader(stream);
-                var writer = new PdfWriter(output);
+                var colorProfile = new PdfaColorProfile($"{_env.ContentRootPath}/ColorProfiles/sRGB_CS_profile.icm");
+                var pdfaConversion = new PdfaConversion(colorProfile);
+                var conformance = formData.GetPdfAConformanceLevel();
 
-                using (var pdf = new PdfDocument(reader))
-                using (var pdfa = new PdfADocument(writer, conformance, intent))
-                {
-                    var pages = new PdfaPages(pdfa);
-                    var metadata = new PdfaMetadata(pdfa);
+                pdfaConversion.Title = formData.Title;
+                pdfaConversion.Author = formData.Author;
+                pdfaConversion.CreationDate = formData.CreationDate;
+                pdfaConversion.CustomProperties = formData.CustomPropertiesAsDictionary();
 
-                    pages.Copy(pdf);
+                var pdfa = pdfaConversion.Convert(pdf, conformance);
 
-                    metadata.CopyCustomProperties(pdf);
-                    metadata.AddOrReplaceCustomProperties(formData.CustomPropertiesAsDictionary());
-                    metadata.AddOrReplaceTitle(formData.Title);
-                    metadata.AddOrReplaceAuthor(formData.Author);
-                    metadata.AddOrReplaceCreationDate(formData.CreationDate);
-
-                    new Document(pdfa).Close();
-
-                    return File(output.ToArray(), MediaTypeNames.Application.Pdf, $"{formData.File.Name}.pdf");
-                }
+                return File(pdfa, MediaTypeNames.Application.Pdf, $"{formData.File.Name}.pdf");
             }
         }
     }

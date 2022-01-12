@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using iText.Kernel.Pdf;
 using iText.Pdfa;
 
-namespace PDFRest.API.Services
+namespace PDFRest.API.Features.Conversion
 {
     public sealed class PdfaMetadata
     {
@@ -30,6 +30,8 @@ namespace PDFRest.API.Services
 
         public void AddOrReplaceCustomProperties(IDictionary<string, string> customProperties)
         {
+            if (customProperties == null) return;
+
             foreach (var property in customProperties)
             {
                 _pdfa.GetDocumentInfo().SetMoreInfo(property.Key, property.Value);

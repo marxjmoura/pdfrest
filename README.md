@@ -6,7 +6,7 @@
     PDF Rest
   </h3>
   <p align="center">
-    REST API to edit PDF files and convert to PDF/A
+    REST API to edit PDF properties, sign using PFX certificate and convert to PDF/A.
     <br>
     <a href="https://marxjmoura.github.io/pdfrest"><strong>Explore PDF Rest docs</strong></a>
   </p>

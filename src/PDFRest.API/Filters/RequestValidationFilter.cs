@@ -1,6 +1,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Filters;
-using PDFRest.API.Models;
+using PDFRest.API.Models.Errors;
 
 namespace PDFRest.API.Filters
 {

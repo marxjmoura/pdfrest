@@ -1,7 +1,7 @@
 using iText.Kernel.Pdf;
 using iText.Pdfa;
 
-namespace PDFRest.API.Services
+namespace PDFRest.API.Features.Conversion
 {
     public sealed class PdfaPages
     {

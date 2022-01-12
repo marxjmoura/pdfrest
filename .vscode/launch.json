@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "PDFRest.API",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build:PDFRest.API",
+      "program": "${workspaceFolder}/src/PDFRest.API/bin/Debug/netcoreapp3.1/PDFRest.API.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/PDFRest.API",
+      "stopAtEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/Views"
+      }
+    }
+  ]
+}

@@ -2,6 +2,8 @@ namespace PDFRest.API
 {
     public sealed class PDFRestOptions
     {
-        public long MaxFileSize { get; set; }
+        public long MaxPdfFileSize { get; set; }
+
+        public long MaxCertificateFileSize { get; set; }
     }
 }

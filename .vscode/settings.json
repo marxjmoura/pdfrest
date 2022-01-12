@@ -1,0 +1,32 @@
+{
+  "debug.toolBarLocation": "docked",
+  "editor.fontSize": 13,
+  "editor.minimap.enabled": false,
+  "editor.rulers": [
+    120
+  ],
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.exclude": {
+    "**/.vs": true,
+    "**/bin": true,
+    "**/obj": true,
+    "**/dist": true,
+    "**/wwwroot": true,
+    "**/coverage": true,
+    "**/node_modules": true,
+    "**/Properties": true,
+    "**/*.csproj.user": true
+  },
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false
+  },
+  "[csharp]": {
+    "editor.tabSize": 4
+  },
+  "[sql]": {
+    "editor.tabSize": 4
+  }
+}
